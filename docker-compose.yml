@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: focuslens-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: focuslens
+      POSTGRES_PASSWORD: focuslens
+      POSTGRES_DB: focuslens
+    ports:
+      - "5432:5432"
+    volumes:
+      - focuslens-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U focuslens"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  focuslens-pgdata:

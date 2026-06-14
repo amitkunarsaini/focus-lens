@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>FocusLens — Settings</title>
+    <style>
+      body { width: 380px; }
+      .field { margin-top: 14px; }
+      .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+      .field input {
+        width: 100%; padding: 9px 11px; border-radius: 10px;
+        border: 1px solid var(--border); background: var(--card); color: var(--fg); font-size: 13px;
+      }
+      .field input:focus { outline: none; border-color: var(--primary); }
+      .hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+      #saved { color: #34d399; font-size: 12px; margin-left: 10px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <span class="logo"></span>
+        <span class="name">Focus<b>Lens</b> Settings</span>
+      </div>
+    </header>
+
+    <div class="field">
+      <label for="serverUrl">Dashboard URL</label>
+      <input id="serverUrl" placeholder="http://localhost:3000" />
+    </div>
+
+    <div class="field">
+      <label for="token">Ingest token</label>
+      <input id="token" placeholder="Paste from dashboard → Connect extension" />
+      <p class="hint">
+        Find this on your FocusLens dashboard. It links collected activity to your account.
+      </p>
+    </div>
+
+    <div class="actions" style="margin-top: 16px">
+      <button id="save" class="btn primary">Save</button>
+      <span id="saved" class="hidden">Saved ✓</span>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>

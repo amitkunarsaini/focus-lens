@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.85rem;
+
+    /* Dark-first palette (HSL). Deep slate base with violet/cyan accents. */
+    --background: 230 25% 6%;
+    --foreground: 220 20% 96%;
+
+    --card: 230 22% 9%;
+    --card-foreground: 220 20% 96%;
+
+    --primary: 258 90% 66%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 230 18% 16%;
+    --secondary-foreground: 220 18% 90%;
+
+    --muted: 230 16% 14%;
+    --muted-foreground: 220 12% 60%;
+
+    --accent: 190 90% 50%;
+    --accent-foreground: 230 25% 6%;
+
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 16% 18%;
+    --input: 230 16% 18%;
+    --ring: 258 90% 66%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  }
+}
+
+/* Ambient gradient backdrop for the app shell. */
+.app-aurora {
+  background:
+    radial-gradient(60rem 40rem at 12% -10%, hsl(258 90% 66% / 0.16), transparent 60%),
+    radial-gradient(50rem 36rem at 100% 0%, hsl(190 90% 50% / 0.10), transparent 55%),
+    radial-gradient(40rem 40rem at 50% 120%, hsl(280 80% 60% / 0.08), transparent 60%);
+}
+
+/* Glass surface used by cards/sidebar. */
+.glass {
+  background: linear-gradient(
+    180deg,
+    hsl(230 22% 11% / 0.7),
+    hsl(230 24% 8% / 0.7)
+  );
+  backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid hsl(230 20% 24% / 0.5);
+}
+
+.glass-hover {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.glass-hover:hover {
+  border-color: hsl(258 90% 66% / 0.45);
+  box-shadow: 0 0 0 1px hsl(258 90% 66% / 0.18), 0 18px 50px -24px hsl(258 90% 50% / 0.4);
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  @apply bg-muted/60 rounded-md;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(220 20% 96% / 0.06),
+    transparent
+  );
+  @apply animate-shimmer;
+}
+
+/* Thin custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(230 16% 22%);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(230 16% 30%);
+  background-clip: content-box;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, hsl(258 90% 72%), hsl(190 90% 60%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

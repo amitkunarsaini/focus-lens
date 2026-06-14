@@ -1,0 +1,57 @@
+:root {
+  color-scheme: dark;
+  --bg: #0c0e14;
+  --card: #14161f;
+  --border: #262a38;
+  --fg: #e8eaf0;
+  --muted: #8a90a3;
+  --primary: #8b5cf6;
+  --accent: #22d3ee;
+}
+* { box-sizing: border-box; }
+body {
+  width: 300px;
+  margin: 0;
+  padding: 14px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.4 system-ui, -apple-system, sans-serif;
+}
+header { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 8px; }
+.logo {
+  width: 22px; height: 22px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+}
+.name { font-size: 15px; font-weight: 600; }
+.name b { font-weight: 600; background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px #34d39988; }
+.dot.off { background: #6b7280; box-shadow: none; }
+
+.banner {
+  margin-top: 12px; padding: 8px 10px; border-radius: 9px;
+  background: #3a2a12; border: 1px solid #5a3f17; color: #f5c97a; font-size: 12px;
+}
+.hidden { display: none; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 11px; padding: 10px 8px; text-align: center; }
+.value { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.toggle { display: flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--muted); cursor: pointer; }
+.toggle input { accent-color: var(--primary); }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.btn {
+  border: 1px solid var(--border); background: var(--card); color: var(--fg);
+  border-radius: 10px; padding: 9px; font-size: 12px; cursor: pointer; transition: 0.15s;
+}
+.btn:hover { border-color: var(--primary); }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.link {
+  width: 100%; margin-top: 10px; background: none; border: none; color: var(--muted);
+  font-size: 11px; cursor: pointer;
+}
+.link:hover { color: var(--fg); }

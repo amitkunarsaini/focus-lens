@@ -19,3 +19,6 @@ extension/src/icons
 
 # Local machine Claude Code config (permissions, etc.)
 .claude/settings.local.json
+
+# Generated dashboard screenshots (regenerate: node scripts/screenshots.mjs)
+docs/screenshots/

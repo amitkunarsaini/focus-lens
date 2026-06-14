@@ -5,12 +5,19 @@ Captures your **real** active-attention browsing and streams it to the FocusLens
 ## Build
 
 ```bash
-npm run ext:build
+npm run ext:build                                            # dev → http://localhost:3000
+FOCUSLENS_DASHBOARD_URL=https://your-app.vercel.app npm run ext:build   # production
 ```
+
+`FOCUSLENS_DASHBOARD_URL` becomes the default dashboard URL in Settings and
+scopes the manifest's `host_permissions` to exactly that origin (+ localhost).
 
 This produces:
 - `extension/dist/` — the unpacked extension (load this folder in Chrome)
 - `extension/focuslens-extension.zip` — a zipped build for sharing / Web Store upload
+
+To publish, see [PRIVACY.md](./PRIVACY.md) for the required privacy policy and
+Chrome Web Store listing notes.
 
 ## Install (Load unpacked)
 

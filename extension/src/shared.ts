@@ -1,5 +1,13 @@
 // Shared types & config helpers for the FocusLens extension.
 
+/**
+ * Replaced at build time by esbuild's `define` from FOCUSLENS_DASHBOARD_URL
+ * (see extension/build.ts). Falls back to localhost for plain editor type-checks.
+ */
+declare const __FL_DEFAULT_URL__: string;
+const DEFAULT_SERVER_URL =
+  typeof __FL_DEFAULT_URL__ !== "undefined" ? __FL_DEFAULT_URL__ : "http://localhost:3000";
+
 export interface FLConfig {
   serverUrl: string;
   token: string;
@@ -19,7 +27,7 @@ export interface QueuedEvent {
 }
 
 export const DEFAULTS: FLConfig = {
-  serverUrl: "http://localhost:3000",
+  serverUrl: DEFAULT_SERVER_URL,
   token: "",
   tracking: true,
 };

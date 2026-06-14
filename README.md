@@ -108,6 +108,19 @@ See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full breakdown.
 
 ---
 
+## Deploy
+
+To put FocusLens online (Vercel + Neon Postgres) and share the extension with
+others, see **[DEPLOY.md](./DEPLOY.md)**. The backend is multi-user — each
+account has its own ingest token, so everyone's data is isolated. The extension
+build is production-aware:
+
+```bash
+FOCUSLENS_DASHBOARD_URL=https://<your-app>.vercel.app npm run ext:build
+```
+
+Extension privacy policy + Chrome Web Store notes: [extension/PRIVACY.md](./extension/PRIVACY.md).
+
 ## Notes
 
 - **Auth**: for frictionless local dev, the credentials provider auto-provisions an account on first sign-in. Add `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` to enable Google sign-in.

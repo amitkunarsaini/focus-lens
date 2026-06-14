@@ -3,7 +3,7 @@
  * Run with: npm run ext:build  (or: npx tsx extension/build.ts --watch)
  */
 import { build, context } from "esbuild";
-import { cpSync, mkdirSync, rmSync, existsSync } from "node:fs";
+import { cpSync, mkdirSync, rmSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,6 +11,15 @@ import { fileURLToPath } from "node:url";
 const root = dirname(fileURLToPath(import.meta.url));
 const outdir = resolve(root, "dist");
 const watch = process.argv.includes("--watch");
+
+/**
+ * The dashboard the extension talks to. Build for production with:
+ *   FOCUSLENS_DASHBOARD_URL=https://your-app.vercel.app npm run ext:build
+ * This becomes the default in the extension's Settings AND scopes the
+ * manifest's host_permissions to exactly that origin (+ localhost for dev).
+ */
+const DASHBOARD_URL = (process.env.FOCUSLENS_DASHBOARD_URL || "http://localhost:3000").replace(/\/$/, "");
+const DASHBOARD_ORIGIN = new URL(DASHBOARD_URL).origin;
 
 rmSync(outdir, { recursive: true, force: true });
 mkdirSync(outdir, { recursive: true });
@@ -28,6 +37,9 @@ const buildOptions = {
   format: "esm" as const,
   target: "chrome114",
   logLevel: "info" as const,
+  define: {
+    __FL_DEFAULT_URL__: JSON.stringify(DASHBOARD_URL),
+  },
 };
 
 function ensureIcons() {
@@ -43,7 +55,15 @@ function ensureIcons() {
 }
 
 function copyStatic() {
-  cpSync(resolve(root, "manifest.json"), resolve(outdir, "manifest.json"));
+  // Template the manifest: scope host_permissions to the dashboard origin only
+  // (the extension reads tab URLs/titles via the "tabs" permission, so it only
+  // needs host access to POST events to the dashboard).
+  const manifest = JSON.parse(readFileSync(resolve(root, "manifest.json"), "utf8"));
+  delete manifest._comment_host_permissions;
+  const hosts = new Set([`${DASHBOARD_ORIGIN}/*`, "http://localhost:3000/*"]);
+  manifest.host_permissions = [...hosts];
+  writeFileSync(resolve(outdir, "manifest.json"), JSON.stringify(manifest, null, 2));
+
   for (const f of ["popup.html", "popup.css", "options.html"]) {
     cpSync(resolve(root, "src", f), resolve(outdir, f));
   }
@@ -64,6 +84,7 @@ function packageZip() {
 }
 
 async function run() {
+  console.log(`FocusLens extension → dashboard: ${DASHBOARD_URL}`);
   if (watch) {
     const ctx = await context(buildOptions);
     await ctx.watch();

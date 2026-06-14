@@ -16,3 +16,6 @@ extension/focuslens-extension.zip
 extension/src/icons
 
 .DS_Store
+
+# Local machine Claude Code config (permissions, etc.)
+.claude/settings.local.json

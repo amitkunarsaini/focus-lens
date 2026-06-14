@@ -3,12 +3,13 @@
  * Run: node scripts/generate-ppt.mjs
  */
 import pptxgen from "pptxgenjs";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 mkdirSync(resolve(root, "docs"), { recursive: true });
+const shot = (name) => resolve(root, "docs/screenshots", name);
 
 // ── theme ────────────────────────────────────────────────────────────────
 const C = {
@@ -101,6 +102,33 @@ function bullets(slide, lines, { x = 0.6, y = 1.9, w = 12.2, h = 4.6, fontSize =
     })),
     { x, y, w, h, fontFace: FONT, fontSize, color: C.fg, valign: "top" },
   );
+}
+
+/** A slide showcasing a real screenshot with a framed image + caption. */
+function shotSlide(kicker, title, caption, imageName, accent = C.violet) {
+  const s = base();
+  chrome(s, kicker);
+  heading(s, title);
+  s.addText(caption, {
+    x: 0.5, y: 1.55, w: 12.3, h: 0.5, fontFace: FONT, fontSize: 14, color: C.muted,
+  });
+  // 1440×900 screenshots → 1.6 aspect. Height-constrained to fit below the title.
+  const h = 5.25;
+  const w = h * 1.6;
+  const x = (W - w) / 2;
+  const y = 2.05;
+  if (existsSync(shot(imageName))) {
+    s.addShape(pptx.ShapeType.roundRect, {
+      x: x - 0.06, y: y - 0.06, w: w + 0.12, h: h + 0.12, rectRadius: 0.06,
+      fill: { color: C.card }, line: { color: accent, width: 1.5 },
+    });
+    s.addImage({ path: shot(imageName), x, y, w, h });
+  } else {
+    s.addText(`(screenshot ${imageName} not found — run: node scripts/screenshots.mjs)`, {
+      x, y, w, h, align: "center", valign: "middle", color: C.muted, fontFace: FONT, fontSize: 14,
+    });
+  }
+  return s;
 }
 
 function stat(slide, x, y, value, label, color) {
@@ -303,21 +331,22 @@ function stat(slide, x, y, value, label, color) {
   ], { cols: 3, top: 1.9, cardH: 1.95 });
 }
 
-// ── 13. Top websites + design ────────────────────────────────────────────────
-{
-  const s = base(); chrome(s, "Highlight");
-  heading(s, "“Where did my time go?”");
-  bullets(s, [
-    { text: "Top Websites by time — every site ranked by exact time spent, with % of total.", bold: true },
-    "Colour-coded by category, with a 7-day / 30-day toggle.",
-    "Built from the same rollups that power the charts — no extra cost.",
-  ], { y: 1.9, h: 2.0 });
-  cards(s, [
-    { title: "github.com", body: "8h 42m · 34%", color: C.violet },
-    { title: "chatgpt.com", body: "3h 06m · 12%", color: C.emerald },
-    { title: "youtube.com", body: "2h 18m · 9%", color: C.rose },
-  ], { cols: 3, top: 4.3, cardH: 1.4 });
-}
+// ── Product tour — real screenshots ──────────────────────────────────────────
+shotSlide("Product tour", "Overview", "Productivity score, focus time, deep work, goal alignment, attention leaks and the daily intelligence summary.", "overview.png", C.violet);
+shotSlide("Product tour", "Analytics", "Productivity & focus trends, average-day hourly distribution, category breakdown and context-switching.", "analytics.png", C.cyan);
+shotSlide("Product tour", "Timeline", "A minute-by-minute view of the day's attention — newest first — with focus blocks and interruptions inline.", "timeline.png", C.emerald);
+shotSlide("Product tour", "Focus Sessions", "Every detected deep-work block, longest session, average quality and your best focus periods.", "focus.png", C.amber);
+shotSlide("Product tour", "Insights", "The Weekly Intelligence Report plus behavioural patterns, risks and recommendations.", "insights.png", C.rose);
+shotSlide("Product tour", "Goals", "Define goals and watch real behaviour measured against them in real time.", "goals.png", C.violet);
+
+// ── 13. Top websites (real screenshot) ───────────────────────────────────────
+shotSlide(
+  "Highlight",
+  "“Where did my time go?”",
+  "Top Websites by time — every site ranked by exact time + % of total, colour-coded by category, with a 7/30-day toggle.",
+  "analytics-websites.png",
+  C.emerald,
+);
 
 // ── 14. Live vs Demo ─────────────────────────────────────────────────────────
 {

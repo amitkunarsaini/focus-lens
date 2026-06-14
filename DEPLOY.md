@@ -39,21 +39,34 @@ DATABASE_URL="…" npm run db:seed
 1. Push this repo to GitHub and **Import Project** in Vercel.
 2. Framework preset: **Next.js** (auto-detected). Leave install/build commands
    as-is — `vercel.json` provides them.
-3. Add **Environment Variables** (Production + Preview):
+3. Add **Environment Variables** (Production + Preview).
+
+   You don't know your Vercel URL until after the first deploy, so split this in
+   two. **Env vars can be added or edited at any time** — but they only take
+   effect on the **next** deployment, so you redeploy after editing.
+
+   **Set these before the first deploy** (don't depend on the URL):
 
    | Key | Value |
    |---|---|
    | `DATABASE_URL` | your Neon **pooled** URL |
-   | `NEXTAUTH_URL` | `https://<your-app>.vercel.app` |
    | `NEXTAUTH_SECRET` | output of `openssl rand -base64 32` |
-   | `NEXT_PUBLIC_APP_URL` | same as `NEXTAUTH_URL` |
    | `ANTHROPIC_API_KEY` | *(optional)* enables AI-enhanced summaries |
    | `FOCUSLENS_AI_MODEL` | *(optional)* e.g. `claude-opus-4-8` |
+
+   **Set these after the first deploy** (need the final Vercel URL):
+
+   | Key | Value |
+   |---|---|
+   | `NEXTAUTH_URL` | `https://<your-app>.vercel.app` |
+   | `NEXT_PUBLIC_APP_URL` | same as `NEXTAUTH_URL` |
    | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | *(optional)* Google sign-in |
 
-4. **Deploy.** After the first deploy, confirm `NEXTAUTH_URL` /
-   `NEXT_PUBLIC_APP_URL` match the final domain (set them to your custom domain
-   if you add one), then redeploy.
+4. **Deploy.** Vercel assigns the URL. Now go back and add the URL-dependent
+   vars above (use your custom domain instead if you add one), then **redeploy**
+   (Deployments → ⋯ → Redeploy, or push a commit). New/edited env vars apply only
+   to deployments created *after* the change — the running one keeps its old
+   values until you redeploy.
 
 ### Google sign-in (optional)
 In Google Cloud Console → OAuth credentials, add the authorized redirect URI:
